@@ -5,7 +5,7 @@ import numpy as np
 from scipy.signal import convolve2d as conv2
 import json
 
-HOSTURL='https://ayanc.github.io/sb/'
+HOSTURL='https://ayanc.github.io/sb/assets/'
 
 html_pfx='''
 <html><head><link rel="stylesheet" type="text/css" href="HOSTURLsb.css">
