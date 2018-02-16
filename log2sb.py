@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 #--Ayan Chakrabarti <ayan@wustl.edu>
 
-import sbplot as sb
-import numpy as np
 import sys
 import re
 import numpy as np
