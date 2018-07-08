@@ -47,7 +47,7 @@ def write_data(out,exps,tags,data):
     for i in range(len(data)):
         steps,vals = smooth(data[i][0],data[i][1],xmax)
         steps = ','.join([str(int(i)) for i in steps])
-        vals = ','.join(['%.5f' % float(i) for i in vals])
+        vals = ','.join(['%.4e' % float(i) for i in vals])
         dstr.append("'" + data[i][2] + "': { x: [" + steps + "], y: [" + vals + "]}");
 
     out.write(html_pfx)
@@ -68,7 +68,10 @@ exps = [v[i].split(':')[0] if len(v[i].split(":")) == 2 else str(i) for i in ran
 # Parse log files
 plots, tags = [], {}
 for j in range(len(files)):
-    lines = re.sub('[\ ]+',' ',re.sub('[,=]',' ',open(files[j]).read()))
+    try:
+        lines = re.sub('[\ ]+',' ',re.sub('[,=]',' ',open(files[j]).read()))
+    except:
+        continue
     lines = [[q[0]]+q[1].split(' ') for q in re.findall(r'\[(\d+)\] ([^\n]*)\n',lines)]
 
     data = {}
