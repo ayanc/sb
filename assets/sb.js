@@ -53,13 +53,24 @@ svgE = {name: 'toSVG',icon: Plotly.Icons.camera,click: function(gd) {
 
 showTag = function (tag) {
     d = []; noteVis();
+
+    miny = 1e30; maxy = -1e30;
     for(i = 0; i < exps.length;i++) {
         if(!data[tag+'@'+exps[i]]) continue;
         el = {};
 	el.name = exps[i]; el.mode = "lines"; el.line = {width: 2.0};
 	el.x = data[tag+'@'+exps[i]].x;
 	el.y = data[tag+'@'+exps[i]].y;
-	if(visT[exps[i]] != undefined) el.visible = visT[exps[i]];
+
+	check = true;
+	if(visT[exps[i]] != undefined) {el.visible = visT[exps[i]]; check=visT[exps[i]];}
+	if(check == true) {
+	    elmy = el.y.slice(0.25*el.y.length)
+	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); })
+	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); })
+	    if(elmy0 < miny) miny = elmy0;
+	    if(elmy1 > maxy) maxy = elmy1;
+	}
 	el.hoverlabel = {namelength: -1}; d.push(el);
     }
     for(i = 0; i < tags.length;i++)
@@ -67,7 +78,8 @@ showTag = function (tag) {
             hash1 = "v"+i;
     document.querySelector('#graph').innerHTML = '';
     document.querySelector('#desc').innerHTML = tag + ' @ *';
-    Plotly.newPlot('graph',d,{hovermode: 'x', margin: {l: 50, r: 100, b: 50, t: 50},xaxis: {nticks: 20}, yaxis: {nticks: 25}}, {showTips: false, displayModeBar: true, modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines','toImage'],modeBarButtonsToAdd:[svgE]});
+
+    Plotly.newPlot('graph',d,{hovermode: 'x', margin: {l: 50, r: 100, b: 50, t: 50},xaxis: {nticks: 20}, yaxis: {nticks: 25, range: [miny, maxy]}}, {showTips: false, displayModeBar: true, modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines','toImage'],modeBarButtonsToAdd:[svgE]});
     state = 1;
     makeHash();
     document.querySelector('#graph').on('plotly_afterplot', function() {noteVis();makeHash();});
@@ -75,13 +87,23 @@ showTag = function (tag) {
 
 showExp = function (exp) {
     d = []; noteVis();
+    miny = 1e30; maxy = -1e30;
     for(i = 0; i < tags.length;i++) {
         if(!data[tags[i]+'@'+exp]) continue;
         el = {};
 	el.name = tags[i]; el.mode = "lines"; el.line = {width: 2.0};
 	el.x = data[tags[i]+'@'+exp].x;
 	el.y = data[tags[i]+'@'+exp].y;
-	if(visE[tags[i]] != undefined) el.visible = visE[tags[i]];
+	check=true;
+	if(visE[tags[i]] != undefined) {el.visible = visE[tags[i]]; check=visE[tags[i]];}
+	if(check == true) {
+	    elmy = el.y.slice(0.25*el.y.length)
+	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); })
+	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); })
+	    if(elmy0 < miny) miny = elmy0;
+	    if(elmy1 > maxy) maxy = elmy1;
+	}
+	
 	el.hoverlabel = {namelength: -1}; d.push(el);
     }
     for(i = 0; i < exps.length;i++)
@@ -89,7 +111,7 @@ showExp = function (exp) {
             hash1 = 'e'+i;
     document.querySelector('#graph').innerHTML = '';
     document.querySelector('#desc').innerHTML = '* @ ' + exp;
-    Plotly.newPlot('graph',d,{hovermode: 'x', margin: {l: 50, r: 100, b: 50, t: 50},xaxis: {nticks: 20}, yaxis: {nticks: 25}}, {showTips: false, displayModeBar: true, modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines','toImage'],modeBarButtonsToAdd:[svgE]});
+    Plotly.newPlot('graph',d,{hovermode: 'x', margin: {l: 50, r: 100, b: 50, t: 50},xaxis: {nticks: 20}, yaxis: {nticks: 25, range: [miny,maxy]}}, {showTips: false, displayModeBar: true, modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines','toImage'],modeBarButtonsToAdd:[svgE]});
     state=2;
     makeHash();
     document.querySelector('#graph').on('plotly_afterplot', function() {noteVis();makeHash();});
