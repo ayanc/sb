@@ -65,14 +65,17 @@ showTag = function (tag) {
 	check = true;
 	if(visT[exps[i]] != undefined) {el.visible = visT[exps[i]]; check=visT[exps[i]];}
 	if(check == true) {
-	    elmy = el.y.slice(0.25*el.y.length)
-	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); })
-	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); })
+	    elmy = el.y.slice(0.25*el.y.length);
+	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); });
+	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); });
 	    if(elmy0 < miny) miny = elmy0;
 	    if(elmy1 > maxy) maxy = elmy1;
 	}
 	el.hoverlabel = {namelength: -1}; d.push(el);
     }
+    ysc = 0.05*(maxy-miny);miny-=ysc;maxy+=ysc;
+    
+    
     for(i = 0; i < tags.length;i++)
         if(tags[i] == tag)
             hash1 = "v"+i;
@@ -97,15 +100,17 @@ showExp = function (exp) {
 	check=true;
 	if(visE[tags[i]] != undefined) {el.visible = visE[tags[i]]; check=visE[tags[i]];}
 	if(check == true) {
-	    elmy = el.y.slice(0.25*el.y.length)
-	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); })
-	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); })
+	    elmy = el.y.slice(0.25*el.y.length);
+	    elmy0 = elmy.reduce(function(a,b) { return Math.min(a,b); });
+	    elmy1 = elmy.reduce(function(a,b) { return Math.max(a,b); });
 	    if(elmy0 < miny) miny = elmy0;
 	    if(elmy1 > maxy) maxy = elmy1;
 	}
 	
 	el.hoverlabel = {namelength: -1}; d.push(el);
     }
+    ysc = 0.05*(maxy-miny);miny-=ysc;maxy+=ysc;
+
     for(i = 0; i < exps.length;i++)
         if(exps[i] == exp)
             hash1 = 'e'+i;
