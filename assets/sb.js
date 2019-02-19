@@ -129,6 +129,13 @@ onKey = function(e) {
 }
 
 window.onload = function (e) {
+
+    if(window.screen.width < 1250) {
+	var viewport = document.createElement('meta');
+        viewport.setAttribute('name','viewport');
+        viewport.setAttribute('content','width=1250');
+	document.getElementsByTagName("head")[0].appendChild(viewport);
+    }
     document.body.innerHTML=`
 <div class='head'><div class='container'><table><tr style='vertical-align: center;'>
 <td id='title'>StaticBoard</td><td>
