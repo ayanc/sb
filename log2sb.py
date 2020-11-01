@@ -22,7 +22,7 @@ html_sfx='''
 '''.strip('\n')
 
 def smooth(x,y,xmax):
-    LIM=5e2
+    LIM=int(5e2)
 
     x2 = np.linspace(0.,xmax,LIM)
     x2 = x2[x2 <= np.max(x)]
