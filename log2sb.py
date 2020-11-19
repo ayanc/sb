@@ -102,7 +102,7 @@ def getdata(files, exps):
             vals = np.float32(data[tag][1])
             name = tag + '@' + exp
             plots.append([its, vals, name])
-    return plots, list(tags)
+    return plots, sorted(list(tags))
 
 
 def main():
