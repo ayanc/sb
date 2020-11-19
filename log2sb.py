@@ -1,54 +1,58 @@
 #!/usr/bin/env python3
-#--Ayan Chakrabarti <ayan@wustl.edu>
+# - Ayan Chakrabarti <ayan.chakrabarti@gmail.com>
+"""Convert log files to html."""
 
+import json
 import sys
 import re
 import numpy as np
-from scipy.signal import convolve2d as conv2
-import json
 
-HOSTURL='https://ayanc.github.io/sb/assets/'
+HOSTURL = 'https://ayanc.github.io/sb/assets/'
 
-########################## Code to output json
+# Code to output json
 html_pfx='''
 <html><head><link rel="stylesheet" type="text/css" href="HOSTURLsb.css">
 <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
 <script src="HOSTURLsb.js"></script>
 <script type="text/javascript">
-'''.replace('HOSTURL',HOSTURL).strip('\n')
+'''.replace('HOSTURL', HOSTURL).strip('\n')
 
 html_sfx='''
 </script></head><body></body></html>
 '''.strip('\n')
 
-def smooth(x,y,xmax):
+
+def smooth(x, y, xmax):
+    """Simple fast smoother."""
     LIM=int(5e2)
+    xmax = len(x)*xmax/x[-1]
+    if xmax <= 2*LIM:
+        return list(x), list(y)
 
-    x2 = np.linspace(0.,xmax,LIM)
-    x2 = x2[x2 <= np.max(x)]
-    ln = int(np.round(3*len(x)/len(x2)))
+    fac = int(np.floor(xmax/LIM))
+    pad = (-len(x)) % fac
+    x = np.pad(x, [[pad, 0]], 'edge')
+    y = np.pad(y, [[pad, 0]], 'edge')
+    x = np.mean(np.reshape(x, (-1, fac)),1)
+    y = np.mean(np.reshape(y, (-1, fac)),1)
 
-    filt = np.linspace(-3,3,2*ln+1)
-    filt = np.exp(-filt*filt/2)
-    filt = filt/np.sum(filt)
-    filt = filt.reshape([1,2*ln+1])
-    
-    y = np.pad(y,((ln,ln)),'edge')
-    y = conv2(y.reshape((1,len(y))),filt,'valid').flatten()
-    y = np.interp(x2,x,y)
+    return list(x), [y[0]] + list(
+        0.5*y[1:-1] + 0.25*y[:-2] + 0.25*y[2:]
+    ) + [y[-1]]
 
-    return list(x2),list(y)
 
 def write_data(out,exps,tags,data):
     dstr = []
     xmax = 0
     for i in range(len(data)):
-        xmax = np.max([xmax,np.max(data[i][0])])
+        xmax = xmax if data[i][0][-1] < xmax else data[i][0][-1]
     for i in range(len(data)):
-        steps,vals = smooth(data[i][0],data[i][1],xmax)
-        steps = ','.join([str(int(i)) for i in steps])
+        steps, vals = smooth(data[i][0], data[i][1], xmax)
+        steps = ','.join(['%.4e' % float(i) for i in steps])
         vals = ','.join(['%.4e' % float(i) for i in vals])
-        dstr.append("'" + data[i][2] + "': { x: [" + steps + "], y: [" + vals + "]}");
+        dstr.append("'" + data[i][2]
+                    + "': { x: [" + steps + "], y: ["
+                    + vals + "]}")
 
     out.write(html_pfx)
     out.write('exps=' + json.dumps(exps) + ';')
