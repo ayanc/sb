@@ -36,6 +36,8 @@ def smooth(x, y, xmax):
     x = np.mean(np.reshape(x, (-1, fac)),1)
     y = np.mean(np.reshape(y, (-1, fac)),1)
 
+    if len(y) < 3:
+        return list(x), list(y)
     return list(x), [y[0]] + list(
         0.5*y[1:-1] + 0.25*y[:-2] + 0.25*y[2:]
     ) + [y[-1]]
