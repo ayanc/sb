@@ -82,15 +82,13 @@ def getdata(files, exps):
         except:
             continue
 
-        lines = [[q[0]] + q[1].split(' ') for
-                 q in re.findall(r'\[(\d+)\] ([^\n]*)\n', lines)]
-
         data = {}
-        for _l in lines:
-            itrs = _l[0]
-            for k in range(1, len(_l), 2):
+        for line in re.finditer(r'\[(\d+)\] ([^\n]*)\n', lines):
+            itrs = line[1]
+            _l = line[2].split(' ')
+            for k in range(0, len(_l)-1, 2):
                 tag, val = _l[k], _l[k+1]
-                if tag not in data.keys():
+                if tag not in data:
                     data[tag] = [[itrs], [val]]
                 else:
                     data[tag][0].append(itrs)
