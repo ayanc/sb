@@ -21,7 +21,7 @@ HTML_DATA = [
 
 def smooth(xdata, ydata, xmax, _limit=int(5e2)):
     """Simple fast smoother."""
-    xmax = len(xdata)*xmax/xdata[-1]
+    xmax = len(xdata)*xmax/np.maximum(xdata[-1], 1)
     if xmax <= 2*_limit:
         return xdata, ydata
 
