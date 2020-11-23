@@ -91,16 +91,21 @@ window.onload = function() {
             <div>
                 <table><tr style="vertical-align: center;">
                     <td id="title">StaticBoard</td>
-                    <td>Group: <select style="width: 250px;" id='group' onclick='javascript:groupChg(this.value);' onchange='javascript:groupChg(this.value);'></select></td>
-                    <td>Exp: <select style="width: 250px;" id='exp' onclick='javascript:showIndiv();' onchange='javascript:showIndiv();'></select></td>
+                    <td><select style="width: 250px;" id='group' onclick='javascript:groupChg(this.value);' onchange='javascript:groupChg(this.value);'></select></td>
                 </tr></table>
             </div>
         </div>
         <div class="graph">
             <div id="selector">
-                <button onclick="javascript:iswitch(-1);">Prev</button>
-                <select style="width: 250px;" id='indiv' onclick='javascript:showIndiv();' onchange='javascript:showIndiv();'></select>
-                <button onclick="javascript:iswitch(1);">Next</button>
+                <button onclick="javascript:eswitch(-1);">Prev (h)</button>
+                <select style="width: 200px;" id='exp' onclick='javascript:showIndiv();' onchange='javascript:showIndiv();'></select>
+                <button onclick="javascript:eswitch(-1);">Next (l)</button>
+
+                &nbsp;&nbsp;&nbsp;
+
+                List: <button onclick="javascript:iswitch(-1);">Prev (k)</button>
+                <select style="width: 200px;" id='indiv' onclick='javascript:showIndiv();' onchange='javascript:showIndiv();'></select>
+                <button onclick="javascript:iswitch(1);">Next (j)</button>
             </div>
             <div id="gallery"></div>
         </div>
