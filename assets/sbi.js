@@ -7,8 +7,14 @@ showIndiv = function() {
 
     imgs = data[group][3][exp][1][indiv];
     for(i = 0; i < imgs.length; i++) {
-        document.querySelector("#lnk"+i).setAttribute("href", imgs[i]);
-        document.querySelector("#img"+i).setAttribute("src", imgs[i]);
+        imgi = imgs[i];
+        if(Array.isArray(imgi)) {
+            texti = imgi[1]; imgi = imgi[0];
+        } else
+            texti = "";
+        document.querySelector("#lnk"+i).setAttribute("href", imgi);
+        document.querySelector("#img"+i).setAttribute("src", imgi);
+        document.querySelector("#lbl"+i).innerHTML = texti;
     }
     history.replaceState(undefined, undefined, "#"+group+"#"+exp+"#"+indiv);
 }
@@ -57,8 +63,10 @@ showGroup = function(val, exp, indiv) {
     document.querySelector('#indiv').innerHTML = html;
 
     html = ''; columns = data[val][1];
-    for(i = 0; i < columns.length; i++)
-        html = html + '<div class="column"><a id="lnk'+i+'" target=_blank><img id="img'+i+'"></a><br/>'+columns[i]+'</div>';
+    for(i = 0; i < columns.length; i++) {
+        html = html + '<div class="column"><a id="lnk'+i+'" target=_blank><img id="img'+i+'"></a>';
+        html = html + '<br/><span style="color: #ebe;" id="lbl'+i+'"></span><br/>'+columns[i]+'</div>';
+    }
     document.querySelector('#gallery').innerHTML = html;
 
     showIndiv();

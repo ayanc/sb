@@ -2,6 +2,7 @@
 """Convert YAML to html."""
 
 import sys
+import os
 import re
 import itertools
 import json
@@ -75,6 +76,10 @@ def parse(fname):
                 row = []
                 for _j, ckey in enumerate(ckeys):
                     col = cfiles[_j][':'.join([sdict[k] for k in ckey])]
+                    coltxt = col.split('.')
+                    coltxt = '.'.join(coltxt[:-1]) + '.txt'
+                    if os.path.isfile(coltxt):
+                        col = [col, open(coltxt, 'r').read()]
                     row.append(col)
                 rows.append(row)
             sublist.append([jname, rows])
